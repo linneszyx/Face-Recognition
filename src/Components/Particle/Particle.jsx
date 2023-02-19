@@ -33,11 +33,11 @@ const Particle = () => {
                     },
                     modes: {
                         push: {
-                            quantity: 4,
+                            quantity: 20,
                         },
                         repulse: {
                             distance: 200,
-                            duration: 0.4,
+                            duration: 10,
                         },
                     },
                 },
