@@ -8,12 +8,6 @@ import FaceRecognise from "./Components/FaceRecognise/FaceRecognise";
 import SignIn from "./Components/SignIn/SignIn";
 import Register from "./Components/Register/Register";
 import "./App.css";
-
-const Clarifai = require("clarifai");
-/* Creating a new instance of the Clarifai API. */
-const app = new Clarifai.App({
-  apiKey: "92dd1c6bc3c241e0a81e9bbee3cc2613",
-});
 /* A constant that is used to reset the state of the app. */
 const initialState = {
   input: "",
@@ -127,7 +121,7 @@ class App extends Component {
             <FaceRecognise box={box} imageUrl={imageUrl} />
           </div>
         ) : route === "signin" ? (
-          <SignIn onRouteChange={this.onRouteChange} />
+          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
             loadUser={this.loadUser}

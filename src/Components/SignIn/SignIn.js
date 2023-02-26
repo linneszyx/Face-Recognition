@@ -14,22 +14,22 @@ class SignIn extends React.Component {
     this.setState({ signInPassword: event.target.value });
   };
   onSubmitSignIn = () => {
-    fetch("http://localhost:3000/signin", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
+    fetch('http://localhost:3000/signin', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        email: this.state.signInemail,
-        password: this.state.signInPassword,
-      }),
+        email: this.state.signInEmail,
+        password: this.state.signInPassword
+      })
     })
-      .then((response) => response.json())
+      .then(response => response.json())
       .then(user => {
         if (user.id) {
-          this.props.loadUser(user);
-          this.props.onRouteChange("home");
+          this.props.loadUser(user)
+          this.props.onRouteChange('home');
         }
-      });
-  };
+      })
+  }
   render() {
     const { onRouteChange } = this.props;
     return (
@@ -43,11 +43,11 @@ class SignIn extends React.Component {
                   Email
                 </label>
                 <input
-                  onChange={this.onEmailChange}
                   className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                   type="email"
                   name="email-address"
                   id="email-address"
+                  onChange={this.onEmailChange}
                 />
               </div>
               <div className="mv3">
@@ -55,11 +55,11 @@ class SignIn extends React.Component {
                   Password
                 </label>
                 <input
-                  onChange={this.onPasswordChange}
                   className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                   type="password"
                   name="password"
                   id="password"
+                  onChange={this.onPasswordChange}
                 />
               </div>
             </fieldset>

@@ -6,7 +6,7 @@ class Register extends React.Component {
       email: "",
       password: "",
       name: "",
-    };
+    }
   }
   onNameChange = (event) => {
     this.setState({ name: event.target.value });
@@ -33,7 +33,7 @@ class Register extends React.Component {
           this.props.loadUser(user)
           this.props.onRouteChange("home");
         }
-      });
+      })
   };
   render() {
     return (
@@ -59,11 +59,11 @@ class Register extends React.Component {
                   Email
                 </label>
                 <input
-                  onChange={this.onEmailChange}
                   className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                   type="email"
                   name="email-address"
                   id="email-address"
+                  onChange={this.onEmailChange}
                 />
               </div>
               <div className="mv3">
@@ -71,11 +71,11 @@ class Register extends React.Component {
                   Password
                 </label>
                 <input
-                  onChange={this.onPasswordChange}
                   className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                   type="password"
                   name="password"
                   id="password"
+                  onChange={this.onPasswordChange}
                 />
               </div>
             </fieldset>
