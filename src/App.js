@@ -11,7 +11,7 @@ import Clarifai from "clarifai";
 import "./App.css";
 /* A constant that is used to reset the state of the app. */
 const app = new Clarifai.App({
-  apiKey: "92dd1c6bc3c241e0a81e9bbee3cc2613",
+  apiKey: process.env.API_CLARIFAI
 });
 
 const initialState = {
