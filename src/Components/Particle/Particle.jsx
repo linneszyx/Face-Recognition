@@ -34,11 +34,11 @@ const Particle = () => {
           },
           modes: {
             push: {
-              quantity: 20,
+              quantity: 5,
             },
             repulse: {
               distance: 200,
-              duration: 10,
+              duration: 5,
             },
           },
         },
@@ -63,7 +63,7 @@ const Particle = () => {
               default: "bounce",
             },
             random: false,
-            speed: 3,
+            speed: 1,
             straight: false,
           },
           number: {
@@ -77,7 +77,7 @@ const Particle = () => {
             value: 0.5,
           },
           shape: {
-            type: "circle",
+            type: "square",
           },
           size: {
             value: { min: 1, max: 5 },

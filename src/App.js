@@ -7,8 +7,13 @@ import Particle from "./Components/Particle/Particle";
 import FaceRecognise from "./Components/FaceRecognise/FaceRecognise";
 import SignIn from "./Components/SignIn/SignIn";
 import Register from "./Components/Register/Register";
+import Clarifai from "clarifai";
 import "./App.css";
 /* A constant that is used to reset the state of the app. */
+const app = new Clarifai.App({
+  apiKey: "92dd1c6bc3c241e0a81e9bbee3cc2613",
+});
+
 const initialState = {
   input: "",
   imageUrl: "",
@@ -57,18 +62,23 @@ class App extends Component {
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
-
+  displayFaceBox = (box) => {
+    this.setState({ box: box });
+  };
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch("http://localhost:3000/imageurl", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        input: this.state.input,
-      }),
-    })
-      .then((response) => response.json())
+    app.models
+      .predict(
+        {
+          id: "face-detection",
+          name: "face-detection",
+          version: "6dc7e46bc9124c5c8824be4822abe105",
+          type: "visual-detector",
+        },
+        this.state.input
+      )
       .then((response) => {
+        console.log("hi", response);
         if (response) {
           fetch("http://localhost:3000/image", {
             method: "put",
@@ -80,16 +90,13 @@ class App extends Component {
             .then((response) => response.json())
             .then((count) => {
               this.setState(Object.assign(this.state.user, { entries: count }));
-            })
-            .catch((err) => console.log(err));
+            });
         }
         this.displayFaceBox(this.calculateFaceLocation(response));
       })
       .catch((err) => console.log(err));
   };
-  displayFaceBox = (box) => {
-    this.setState({ box: box });
-  };
+
   onRouteChange = (route) => {
     if (route === "signout") {
       this.setState(initialState);
