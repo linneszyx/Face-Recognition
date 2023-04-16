@@ -11,13 +11,13 @@ import Clarifai from "clarifai";
 import "./App.css";
 /* A constant that is used to reset the state of the app. */
 const app = new Clarifai.App({
-  apiKey: "92dd1c6bc3c241e0a81e9bbee3cc2613"
+  apiKey: "92dd1c6bc3c241e0a81e9bbee3cc2613",
 });
 
 const initialState = {
   input: "",
   imageUrl: "",
-  box: {},
+  boxes: [],
   route: "signin",
   isSignedIn: false,
   user: {
@@ -46,24 +46,25 @@ class App extends Component {
     });
   };
   /* This function is used to calculate the location of the face in the image. */
-  calculateFaceLocation = (data) => {
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById("inputimage");
-    const width = Number(image.width);
-    const height = Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - clarifaiFace.right_col * width,
-      bottomRow: height - clarifaiFace.bottom_row * height,
-    };
+  calculateFaceLocations = (data) => {
+    return data.outputs[0].data.regions.map((face) => {
+      const clarifaiFace = face.region_info.bounding_box;
+      const image = document.getElementById("inputimage");
+      const width = Number(image.width);
+      const height = Number(image.height);
+      return {
+        leftCol: clarifaiFace.left_col * width,
+        topRow: clarifaiFace.top_row * height,
+        rightCol: width - clarifaiFace.right_col * width,
+        bottomRow: height - clarifaiFace.bottom_row * height,
+      };
+    });
   };
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   };
-  displayFaceBox = (box) => {
-    this.setState({ box: box });
+  displayFaceBoxes = (boxes) => {
+    this.setState({ boxes: boxes });
   };
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
@@ -80,7 +81,7 @@ class App extends Component {
       .then((response) => {
         console.log("hi", response);
         if (response) {
-          fetch("https://facebackey.onrender.com/image", {
+          fetch("http://localhost:3000/image", {
             method: "put",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -92,7 +93,7 @@ class App extends Component {
               this.setState(Object.assign(this.state.user, { entries: count }));
             });
         }
-        this.displayFaceBox(this.calculateFaceLocation(response));
+        this.displayFaceBoxes(this.calculateFaceLocations(response));
       })
       .catch((err) => console.log(err));
   };
@@ -106,7 +107,7 @@ class App extends Component {
     this.setState({ route: route });
   };
   render() {
-    const { isSignedIn, imageUrl, route, box } = this.state;
+    const { isSignedIn, imageUrl, route, boxes } = this.state;
     return (
       <div className="App">
         <Particle className="particles" />
@@ -125,7 +126,7 @@ class App extends Component {
               onInputChange={this.onInputChange}
               onButtonSubmit={this.onButtonSubmit}
             />
-            <FaceRecognise box={box} imageUrl={imageUrl} />
+            <FaceRecognise boxes={boxes} imageUrl={imageUrl} />
           </div>
         ) : route === "signin" ? (
           <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
